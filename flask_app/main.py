@@ -1,6 +1,14 @@
 from flask import Flask, render_template
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+
+
+@socketio.on("message")
+def handle_message(msg):
+    socketio.send(msg, broadcast=True)
 
 
 @app.route("/")
@@ -9,5 +17,5 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run()
+    socketio.run(app)
 
